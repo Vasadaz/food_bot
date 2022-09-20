@@ -22,12 +22,23 @@ def error(state, error):
 
 def start(update, context):
     chat_id = update.message.chat.id
-
+    
+    inline_keyboard = [
+        [InlineKeyboardButton('Принять', callback_data='agree')],
+        [InlineKeyboardButton('Отказаться', callback_data='disagree')]
+    ]
+    inline_markup = InlineKeyboardMarkup(inline_keyboard)
+    
     context.bot.send_message(
         chat_id=chat_id,
-        text='Привет, я работаю',
+        text='Привет! Для начала работы с ботом нужно принять соглашение на обработку персональных данных',
+        reply_markup=inline_markup
     )
-
+    context.bot.send_document(
+        chat_id=chat_id,
+        document='https://www.africau.edu/images/default/sample.pdf'
+    )
+    
 
 def main():
     tg_token = env.str('TELEGRAM_TOKEN')
