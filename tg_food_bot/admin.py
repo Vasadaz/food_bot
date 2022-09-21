@@ -1,16 +1,13 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
-from .models import Dish, Guest
+from .models import Dish, Guest, Category
 
 
-class DishAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'title',
-        'category',
-        'active',
     )
-    list_filter = ('category',)
-    list_editable = ('active',)
     list_per_page = 15
 
 
@@ -19,7 +16,7 @@ class GuestAdmin(admin.ModelAdmin):
         'telegram_id',
         'name',
         'phonenumber',
-        'priority_category',
+        'priority_categories',
     )
     raw_id_fields = (
         'likes',
@@ -28,5 +25,30 @@ class GuestAdmin(admin.ModelAdmin):
     list_per_page = 15
 
 
-admin.site.register(Dish, DishAdmin)
+class DishAdmin(admin.ModelAdmin):
+    fields = [
+        'title',
+        'image',
+        'preview',
+        'categories',
+        'ingredients',
+        'recipe',
+        'active',
+    ]
+    list_display = (
+        'title',
+        'categories',
+        'active',
+    )
+    list_filter = ('categories',)
+    list_editable = ('active',)
+    list_per_page = 15
+    readonly_fields = ['preview']
+
+    def preview(self, obj):
+        return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
+
+
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Guest, GuestAdmin)
+admin.site.register(Dish, DishAdmin)
