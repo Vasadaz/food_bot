@@ -86,8 +86,8 @@ def main():
         for page in pages_nums_to_parse:
             flag = True
             while flag:
+                parsing_url = f'{url}{page}'
                 try:
-                    parsing_url = f'{url}{page}'
                     response = requests.get(parsing_url)
                     response.raise_for_status()
                     recipes_urls_by_cat[category].extend(parse_recipes_urls(response.text, url))
@@ -116,7 +116,7 @@ def main():
                     time.sleep(60)
                     continue
                 except requests.HTTPError:
-                    logging.info(f'Страницы {parsing_url} нет на сайте.')
+                    logging.info(f'Страницы {url} нет на сайте.')
                     flag = False
     with open(save_json_path, 'w', encoding="utf-8") as file:
         json.dump(recipes, file, indent=4, ensure_ascii=False)
