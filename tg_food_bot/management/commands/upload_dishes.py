@@ -4,22 +4,38 @@ from pathlib import Path
 
 from django.core.management.base import BaseCommand
 
-from tg_food_bot.models import Dish
+from tg_food_bot.models import Dish, Category
 
 
 DISHES_PATH = Path('static/recipes.json')
 
 
+def add_categories_to_dish(dish_obj, categories: list):
+    for category in categories:
+        if category:
+            category_obj, created = Category.objects.get_or_create(
+                title=category,
+            )
+            dish_obj.categories.add(category_obj)
+
+
 def add_dish(dish: dict):
-    dish_obj = Dish(
-        title=dish['title'],
-        image=dish['image'],
-        # categories=dish['categories'],
-        ingredients=dish['ingredients'],
-        recipe=dish['recipe'],
-    )
-    dish_obj.save()
-    print('Add dish:', dish_obj)
+    title = dish['title']
+
+    if not Dish.objects.filter(title=title):
+        dish_obj = Dish(
+            title=title,
+            image=dish['image'],
+            ingredients='\n'.join(dish['ingredients']),
+            recipe='\n'.join(dish['recipe']),
+        )
+        dish_obj.save()
+
+        add_categories_to_dish(dish_obj, dish['categories'])
+
+        print('Add dish:', dish_obj)
+    else:
+        print('DUBLLE:', title)
 
 
 def main():
