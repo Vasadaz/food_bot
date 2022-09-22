@@ -63,7 +63,7 @@ def parse_recipe(response, category, image_save_path):
 
     recipe = {
         'title': title,
-        'category': set_random_categories(category),
+        'categories': add_random_categories(category),
         'description': description,
         'ingredients': ingredients,
         'recipe': cooking_steps,
@@ -72,7 +72,7 @@ def parse_recipe(response, category, image_save_path):
     return recipe
 
 
-def set_random_categories(category_key: str) -> list:
+def add_random_categories(category_key: str) -> list:
     global CATEGORIES
     import random
 
