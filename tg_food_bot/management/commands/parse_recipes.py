@@ -63,13 +63,32 @@ def parse_recipe(response, category, image_save_path):
 
     recipe = {
         'title': title,
-        'category': category,
+        'category': set_random_categories(category),
         'description': description,
         'ingredients': ingredients,
         'recipe': cooking_steps,
         'image': str(image_path),
     }
     return recipe
+
+
+def set_random_categories(category_key: str) -> list:
+    global CATEGORIES
+    import random
+
+    static_category = CATEGORIES[category_key]
+
+    if not static_category:
+        return [static_category]
+
+    categories = list(CATEGORIES.values())
+    categories.remove(None)
+    random_number = random.randrange(len(categories))
+    random_categories = random.sample(categories, random_number)
+    if static_category not in random_categories:
+        random_categories.append(CATEGORIES[category_key])
+
+    return random_categories
 
 
 def main():
