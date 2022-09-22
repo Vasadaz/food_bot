@@ -2,8 +2,8 @@ import json
 
 from pathlib import Path
 
-from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.management.base import BaseCommand
 
 from tg_food_bot.models import Dish
 
