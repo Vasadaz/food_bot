@@ -10,8 +10,8 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 
-def create_directory(save_dir, save_path=Path.cwd()):
-    dir_path = Path(save_path) / save_dir
+def create_directory(save_dir):
+    dir_path = Path(save_dir)
     Path.mkdir(dir_path, parents=True, exist_ok=True)
     return dir_path
 
@@ -66,7 +66,7 @@ def parse_recipe(response, category, image_save_path):
 
 def main():
     print('parsing...')
-    image_save_path = create_directory('media')
+    image_save_path = create_directory('media/images')
     save_json_path = create_directory('static') / 'recipes.json'
 
     base_url = 'https://povar.ru/rating/{}/'
