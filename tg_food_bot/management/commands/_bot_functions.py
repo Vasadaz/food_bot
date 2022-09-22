@@ -34,6 +34,12 @@ def input_user_name(update, context):
             chat_id=query.message.chat.id,
             message_id=query.message.message_id
         )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id + 1
+        )
+        return 'INPUT_PHONE_NUMBER'
+
     elif query.data == 'disagree':
         message_text = 'Очень жаль, что вы не с нами. Если передумаете - введите /start'
         context.bot.send_message(
@@ -41,11 +47,14 @@ def input_user_name(update, context):
             text=message_text,
         )
         context.bot.delete_message(
-            chat_id=update.message.chat.id,
-            message_id=update.message.message_id
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
         )
-
-    return 'INPUT_PHONE_NUMBER'
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id + 1
+        )
+        return 'START'
 
 
 def input_phone_number(update, context):
