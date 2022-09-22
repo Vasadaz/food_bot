@@ -32,7 +32,7 @@ def download_image(image_url, title, path):
     save_img_path = path / file_name
     with open(save_img_path, 'wb') as file:
         file.write(response.content)
-    return save_img_path
+    return save_img_path.relative_to('media')
 
 
 def parse_recipes_urls(response, url):
