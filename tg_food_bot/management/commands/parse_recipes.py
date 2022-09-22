@@ -9,6 +9,14 @@ import requests
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
+CATEGORIES = {
+    'fish': 'Рыбные блюда',
+    'vegetarianskoe_pitanie': 'Вегетарианские блюда',
+    'bez_glutena': 'Блюда без глютена',
+    'salad': 'Салаты',
+    'no_diet': None,
+}
+
 
 def create_directory(save_dir):
     dir_path = Path(save_dir)
@@ -70,16 +78,9 @@ def main():
     save_json_path = create_directory('static') / 'recipes.json'
 
     base_url = 'https://povar.ru/rating/{}/'
-    categories = (
-        'fish',
-        'vegetarianskoe_pitanie',
-        'bez_glutena',
-        'salad',
-    )
-    parsing_urls = {category: base_url.format(category) for category in categories}
-    parsing_urls['no_diet'] = 'https://povar.ru/mostnew/all/'  # add recipes without filtres
-    recipes_urls_by_cat = {category: [] for category in categories}
-    recipes_urls_by_cat['no_diet'] = []
+    parsing_urls = {category: base_url.format(category) for category in CATEGORIES.keys()}
+    parsing_urls['no_diet'] = 'https://povar.ru/mostnew/all/'  # add recipes without filters
+    recipes_urls_by_cat = {category: [] for category in CATEGORIES}
     pages_nums_to_parse = range(1, 2)
     for category, url in parsing_urls.items():
         for page in pages_nums_to_parse:
