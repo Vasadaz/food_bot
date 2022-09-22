@@ -33,25 +33,20 @@ class Dish(models.Model):
         null=True,
         upload_to='images',
     )
-    categories = models.ForeignKey(
+    categories = models.ManyToManyField(
         Category,
-        verbose_name='Любимая категория блюд',
-        db_index=True,
-        default=None,
+        verbose_name='Категория',
         blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
+        db_index=True,
         related_name='dishes',
     )
     ingredients = models.TextField(
         verbose_name='Ингредиенты',
-        default=None,
         blank=True,
         null=True,
     )
     recipe = models.TextField(
-        verbose_name='Рецепт приготовления',
-        default=None,
+        verbose_name='Рецепт',
         blank=True,
         null=True,
     )
@@ -59,27 +54,26 @@ class Dish(models.Model):
         verbose_name='Показывать блюдо',
         db_index=True,
         default=True,
-        null=True,
     )
 
     class Meta:
-        verbose_name = 'рецепт'
-        verbose_name_plural = 'Рецепты'
+        verbose_name = 'блюдо'
+        verbose_name_plural = 'Блюда'
 
     def __str__(self):
         return self.title
 
 
 class Guest(models.Model):
+    name = models.CharField(
+        verbose_name='Имя',
+        max_length=200,
+    )
     telegram_id = models.IntegerField(
         verbose_name='Телеграм ID',
         blank=True,
         null=True,
         unique=True,
-    )
-    name = models.CharField(
-        verbose_name='Имя',
-        max_length=200,
     )
     phonenumber = PhoneNumberField(
         verbose_name='Номер телефона',
@@ -88,30 +82,26 @@ class Guest(models.Model):
         null=True,
         region='RU',
     )
-    priority_categories = models.ForeignKey(
+    priority_categories = models.ManyToManyField(
         Category,
         verbose_name='Любимые категория блюд',
         db_index=True,
         blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
         related_name='guests',
     )
     likes = models.ManyToManyField(
         Dish,
         verbose_name='Любимые рецепты',
-        related_name='like_guests',
         blank=True,
-        null=True,
         db_index=True,
+        related_name='like_guests',
     )
     dislikes = models.ManyToManyField(
         Dish,
         verbose_name='Не любимые рецепты',
-        related_name='dislike_guests',
         blank=True,
-        null=True,
         db_index=True,
+        related_name='dislike_guests',
     )
 
     class Meta:
@@ -120,3 +110,5 @@ class Guest(models.Model):
 
     def __str__(self):
         return self.name
+
+

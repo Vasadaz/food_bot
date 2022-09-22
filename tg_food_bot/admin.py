@@ -13,14 +13,14 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class GuestAdmin(admin.ModelAdmin):
     list_display = (
-        'telegram_id',
         'name',
+        'telegram_id',
         'phonenumber',
-        'priority_categories',
     )
     raw_id_fields = (
         'likes',
         'dislikes',
+        'priority_categories',
     )
     list_per_page = 15
 
@@ -37,16 +37,19 @@ class DishAdmin(admin.ModelAdmin):
     ]
     list_display = (
         'title',
-        'categories',
         'active',
     )
     list_filter = ('categories',)
     list_editable = ('active',)
     list_per_page = 15
+    raw_id_fields = ('categories',)
     readonly_fields = ['preview']
 
+    @admin.display(description='Превью изображения')
     def preview(self, obj):
         return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
+
+
 
 
 admin.site.register(Category, CategoryAdmin)
