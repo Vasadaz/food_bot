@@ -1,5 +1,15 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+from ._keyboards import (
+    start_keyboard,
+    disagree_keyboard,
+    main_menu_keyboard,
+    profile_keyboard,
+    random_recipe_keyboard,
+    liked_recipe_keyboard,
+)
+
+
 def start(update, context):
     try:
         query = update.callback_query
@@ -9,16 +19,10 @@ def start(update, context):
         chat_id = update.message.chat_id
         message_id = update.message.message_id
 
-    inline_keyboard = [
-        [InlineKeyboardButton('Принять', callback_data='agree')],
-        [InlineKeyboardButton('Отказаться', callback_data='disagree')]
-    ]
-    inline_markup = InlineKeyboardMarkup(inline_keyboard)
-
     context.bot.send_message(
         chat_id=chat_id,
         text='Привет! Для начала работы с ботом нужно принять соглашение на обработку персональных данных',
-        reply_markup=inline_markup
+        reply_markup=start_keyboard()
     )
     context.bot.send_document(
         chat_id=chat_id,
@@ -53,15 +57,10 @@ def input_user_name(update, context):
     elif query.data == 'disagree':
         message_text = 'Очень жаль, что вы не с нами. Если передумаете - нажмите кнопку'
 
-        inline_keyboard = [
-            [InlineKeyboardButton('Кнопка', callback_data='start')],
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
-
         context.bot.send_message(
             chat_id=query.message.chat.id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=disagree_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
@@ -101,16 +100,11 @@ def main_menu_handler(update, context):
         chat_id = update.message.chat_id
 
     message_text = 'Выберите действие:'
-    inline_keyboard = [
-        [InlineKeyboardButton('Рецепт', callback_data='recipe')],
-        [InlineKeyboardButton('Личный кабинет', callback_data='profile')]
-    ]
-    inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
 
     context.bot.send_message(
         chat_id=chat_id,
         text=message_text,
-        reply_markup=inline_kb_markup
+        reply_markup=main_menu_keyboard()
     )
     context.bot.delete_message(
         chat_id=chat_id,
@@ -130,17 +124,11 @@ def profile_handler(update, context):
 
     if query.data == 'profile':
         message_text = 'Выберите действие:'
-        inline_keyboard = [
-            [InlineKeyboardButton('Любимые рецепты', callback_data='liked_recipes')],
-            [InlineKeyboardButton('Настройки', callback_data='settings')],
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')]
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
 
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=profile_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
@@ -151,19 +139,10 @@ def profile_handler(update, context):
     elif query.data == 'recipe':
         message_text = 'Тут будет рецепт'
 
-        inline_keyboard = [
-            [
-                InlineKeyboardButton('Лайк', callback_data='like'),
-                InlineKeyboardButton('Следующий', callback_data='next'),
-                InlineKeyboardButton('Дизлайк', callback_data='dislike')],
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
-
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=random_recipe_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
@@ -216,16 +195,11 @@ def settings_handler(update, context):
 
     elif query.data == 'main_menu':
         message_text = 'Выберите действие:'
-        inline_keyboard = [
-            [InlineKeyboardButton('Рецепт', callback_data='recipe')],
-            [InlineKeyboardButton('Личный кабинет', callback_data='profile')]
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
 
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=main_menu_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
@@ -241,91 +215,50 @@ def random_recipe_handler(update, context):
     if query.data == 'like':
         message_text = 'Рецепт добавлен в "Любимые"'
 
-        inline_keyboard = [
-            [
-                InlineKeyboardButton('Убрать из любимых', callback_data='unlike'),
-                InlineKeyboardButton('Следующий', callback_data='next'),
-                InlineKeyboardButton('Дизлайк', callback_data='dislike')],
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
-
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=liked_recipe_keyboard()
         )
         return 'RANDOM_RECIPE'
 
     elif query.data == 'dislike':
         message_text = 'Рецепт убран из выдачи, попробуйте этот рецепт (реализовать отображение нового рецепта)'
 
-        inline_keyboard = [
-            [
-                InlineKeyboardButton('Лайк', callback_data='like'),
-                InlineKeyboardButton('Следующий', callback_data='next'),
-                InlineKeyboardButton('Дизлайк', callback_data='dislike')],
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
-
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=random_recipe_keyboard()
         )
         return 'RANDOM_RECIPE'
 
     elif query.data == 'next':
         message_text = 'Новый рецепт (реализовать отображение нового рецепта)'
 
-        inline_keyboard = [
-            [
-                InlineKeyboardButton('Лайк', callback_data='like'),
-                InlineKeyboardButton('Следующий', callback_data='next'),
-                InlineKeyboardButton('Дизлайк', callback_data='dislike')],
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
-
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=random_recipe_keyboard()
         )
         return 'RANDOM_RECIPE'
 
     elif query.data == 'unlike':
         message_text = 'Рецепт добавлен в "Любимые"'
 
-        inline_keyboard = [
-            [
-                InlineKeyboardButton('Лайк', callback_data='like'),
-                InlineKeyboardButton('Следующий', callback_data='next'),
-                InlineKeyboardButton('Дизлайк', callback_data='dislike')],
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
-
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=random_recipe_keyboard()
         )
         return 'RANDOM_RECIPE'
 
     elif query.data == 'main_menu':
         message_text = 'Выберите действие:'
-        inline_keyboard = [
-            [InlineKeyboardButton('Рецепт', callback_data='recipe')],
-            [InlineKeyboardButton('Личный кабинет', callback_data='profile')]
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
 
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=main_menu_keyboard()
         )
         return 'PROFILE'
 
@@ -338,16 +271,11 @@ def liked_dishes(update, context):
         pass
     elif query.data == 'main_menu':
         message_text = 'Выберите действие:'
-        inline_keyboard = [
-            [InlineKeyboardButton('Рецепт', callback_data='recipe')],
-            [InlineKeyboardButton('Личный кабинет', callback_data='profile')]
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
 
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=main_menu_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
@@ -363,16 +291,11 @@ def user_settings(update, context):
         pass
     elif query.data == 'main_menu':
         message_text = 'Выберите действие:'
-        inline_keyboard = [
-            [InlineKeyboardButton('Рецепт', callback_data='recipe')],
-            [InlineKeyboardButton('Личный кабинет', callback_data='profile')]
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
 
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=main_menu_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
