@@ -60,9 +60,39 @@ def liked_random_recipe_keyboard():
     return inline_kb_markup
 
 
-# def __():
-#     return inline_kb_markup
-#
-#
-# def __():
-#     return inline_kb_markup
+def liked_dishes_keyboard():
+    '''Генератор кнопок с любимыми блюдами '''
+    inline_keyboard = [
+            [InlineKeyboardButton('1', callback_data='dish')],
+            [InlineKeyboardButton('2', callback_data='dish')],
+            [InlineKeyboardButton('3', callback_data='dish')],
+            [InlineKeyboardButton('Главное меню', callback_data='main_menu')]
+    ]
+
+    inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
+    return inline_kb_markup
+
+
+def liked_dish_keyboard():
+    inline_keyboard = [
+        [
+            InlineKeyboardButton('Удалить', callback_data='delete'),
+            InlineKeyboardButton('Главное меню', callback_data='main_menu')
+        ]
+    ]
+    inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
+    return inline_kb_markup
+
+def categories_keyboard():
+    '''Генератор кнопок с категориями для выбора'''
+    inline_keyboard = [
+        [InlineKeyboardButton('1', callback_data='category')],
+        [InlineKeyboardButton('2', callback_data='category')],
+        [InlineKeyboardButton('3', callback_data='category')],
+        [InlineKeyboardButton('Сбросить категорию', callback_data='del_user_category'),
+         InlineKeyboardButton('Главное меню', callback_data='main_menu')]
+    ]
+
+    inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
+    return inline_kb_markup
+

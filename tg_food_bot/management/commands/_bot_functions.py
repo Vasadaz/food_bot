@@ -7,8 +7,10 @@ from ._keyboards import (
     profile_keyboard,
     random_recipe_keyboard,
     liked_random_recipe_keyboard,
+    liked_dishes_keyboard,
+    categories_keyboard,
+    liked_dish_keyboard
 )
-
 
 def start(update, context):
     try:
@@ -158,15 +160,11 @@ def settings_handler(update, context):
     if query.data == 'liked_recipes':
         message_text = 'Список кнопок с любимыми рецептами,' \
                        ' либо "извините, у вас нет любимых рецептов"(генератор кнопок)'
-        inline_keyboard = [
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')]
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
 
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=liked_dishes_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
@@ -177,15 +175,11 @@ def settings_handler(update, context):
     elif query.data == 'settings':
         message_text = 'Настройка фильтров отображения рецептов:' \
                        'Генератор кнопок по категориям + сброс всех '
-        inline_keyboard = [
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')]
-        ]
-        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
 
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=inline_kb_markup
+            reply_markup=categories_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
@@ -277,7 +271,19 @@ def liked_dishes(update, context):
     chat_id = query.message.chat.id
 
     if query.data == 'liked':
-        pass
+        message_text = 'Cписок любимых блюд'
+
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message_text,
+            reply_markup=liked_dish_keyboard()
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
+        return 'LIKED_DISHES'
+
     elif query.data == 'main_menu':
         message_text = 'Выберите действие:'
 
@@ -291,13 +297,26 @@ def liked_dishes(update, context):
             message_id=query.message.message_id
         )
         return 'PROFILE'
+
 
 def user_settings(update, context):
     query = update.callback_query
     chat_id = query.message.chat.id
 
-    if query.data == 'filtres':
-        pass
+    if query.data == 'category':
+        message_text = 'Категории блюд. Сейчас выбрана категория {category}'
+
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message_text,
+            reply_markup=categories_keyboard()
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
+        return 'USER_CATEGORIES'
+
     elif query.data == 'main_menu':
         message_text = 'Выберите действие:'
 
@@ -311,3 +330,68 @@ def user_settings(update, context):
             message_id=query.message.message_id
         )
         return 'PROFILE'
+
+def user_dishes(update, context):
+    query = update.callback_query
+    chat_id = query.message.chat.id
+
+    if query.data == 'main_menu':
+        message_text = 'Выберите действие:'
+
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message_text,
+            reply_markup=main_menu_keyboard()
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
+        return 'PROFILE'
+
+    elif query.data == 'dish':
+        message_text = 'Блюдо'
+
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message_text,
+            reply_markup=liked_dish_keyboard()
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
+        return
+
+def user_categories(update, context):
+    query = update.callback_query
+    chat_id = query.message.chat.id
+
+    if query.data == 'main_menu':
+        message_text = 'Выберите действие:'
+
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message_text,
+            reply_markup=main_menu_keyboard()
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
+        return 'PROFILE'
+
+    elif query.data == 'category':
+        message_text = 'Категории блюд. Сейчас выбрана категория {category}'
+
+        context.bot.edit_message_text(
+            chat_id=chat_id,
+            message_id=query.message.message_id,
+            text=message_text,
+            reply_markup=categories_keyboard()
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
+        return 'USER_CATEGORIES'
