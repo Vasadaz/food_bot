@@ -18,6 +18,10 @@ def start(update, context):
         chat_id=chat_id,
         document='https://www.africau.edu/images/default/sample.pdf'
     )
+    context.bot.delete_message(
+        chat_id=chat_id,
+        message_id=update.message.message_id
+    )
 
     return 'INPUT_USER_NAME'
 
@@ -66,6 +70,10 @@ def input_phone_number(update, context):
     )
     context.bot.delete_message(
         chat_id=chat_id,
+        message_id=update.message.message_id
+    )
+    context.bot.delete_message(
+        chat_id=chat_id,
         message_id=update.message.message_id - 1
     )
 
@@ -93,6 +101,10 @@ def main_menu_handler(update, context):
     )
     context.bot.delete_message(
         chat_id=chat_id,
+        message_id=update.message.message_id
+    )
+    context.bot.delete_message(
+        chat_id=chat_id,
         message_id=update.message.message_id - 1
     )
 
@@ -117,6 +129,10 @@ def profile_handler(update, context):
             text=message_text,
             reply_markup=inline_kb_markup
         )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
         return 'SETTINGS'
 
     elif query.data == 'recipe':
@@ -135,6 +151,10 @@ def profile_handler(update, context):
             chat_id=chat_id,
             text=message_text,
             reply_markup=inline_kb_markup
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
         )
         return 'RANDOM_RECIPE'
 
@@ -156,6 +176,10 @@ def settings_handler(update, context):
             text=message_text,
             reply_markup=inline_kb_markup
         )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
         return 'LIKED_DISHES'
 
     elif query.data == 'settings':
@@ -171,6 +195,10 @@ def settings_handler(update, context):
             text=message_text,
             reply_markup=inline_kb_markup
         )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
         return 'USER_SETTINGS'
 
     elif query.data == 'main_menu':
@@ -185,6 +213,10 @@ def settings_handler(update, context):
             chat_id=chat_id,
             text=message_text,
             reply_markup=inline_kb_markup
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
         )
         return 'PROFILE'
 
@@ -304,6 +336,10 @@ def liked_dishes(update, context):
             text=message_text,
             reply_markup=inline_kb_markup
         )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
         return 'PROFILE'
 
 def user_settings(update, context):
@@ -324,5 +360,9 @@ def user_settings(update, context):
             chat_id=chat_id,
             text=message_text,
             reply_markup=inline_kb_markup
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
         )
         return 'PROFILE'
