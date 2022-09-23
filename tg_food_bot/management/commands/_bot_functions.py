@@ -1,4 +1,7 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from ._func_for_dish import (
+    get_random_dish,
+    get_dish_content
+)
 
 from ._keyboards import (
     start_keyboard,
@@ -139,11 +142,16 @@ def profile_handler(update, context):
         return 'SETTINGS'
 
     elif query.data == 'recipe':
-        message_text = 'Тут будет рецепт'
+        dish = get_random_dish()
+        dish_content = get_dish_content(dish)
 
+        context.bot.send_photo(
+            chat_id=chat_id,
+            photo=dish_content['image']
+        )
         context.bot.send_message(
             chat_id=chat_id,
-            text=message_text,
+            text=dish_content['message'],
             reply_markup=random_recipe_keyboard()
         )
         context.bot.delete_message(
@@ -226,28 +234,50 @@ def random_recipe_handler(update, context):
     elif query.data == 'dislike':
         message_text = 'Рецепт убран из выдачи, попробуйте этот рецепт (реализовать отображение нового рецепта)'
 
+        dish = get_random_dish()
+        dish_content = get_dish_content(dish)
+
+        context.bot.send_photo(
+            chat_id=chat_id,
+            photo=dish_content['image']
+        )
         context.bot.send_message(
             chat_id=chat_id,
-            text=message_text,
+            text=dish_content['message'],
             reply_markup=random_recipe_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
             message_id=query.message.message_id
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id - 1
         )
         return 'RANDOM_RECIPE'
 
     elif query.data == 'next':
         message_text = 'Новый рецепт (реализовать отображение нового рецепта)'
 
+        dish = get_random_dish()
+        dish_content = get_dish_content(dish)
+
+        context.bot.send_photo(
+            chat_id=chat_id,
+            photo=dish_content['image']
+        )
         context.bot.send_message(
             chat_id=chat_id,
-            text=message_text,
+            text=dish_content['message'],
             reply_markup=random_recipe_keyboard()
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
             message_id=query.message.message_id
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id - 1
         )
         return 'RANDOM_RECIPE'
 
@@ -262,6 +292,10 @@ def random_recipe_handler(update, context):
         context.bot.delete_message(
             chat_id=query.message.chat.id,
             message_id=query.message.message_id
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id - 1
         )
         return 'PROFILE'
 
@@ -331,6 +365,7 @@ def user_settings(update, context):
         )
         return 'PROFILE'
 
+
 def user_dishes(update, context):
     query = update.callback_query
     chat_id = query.message.chat.id
@@ -362,6 +397,7 @@ def user_dishes(update, context):
             message_id=query.message.message_id
         )
         return
+
 
 def user_categories(update, context):
     query = update.callback_query
