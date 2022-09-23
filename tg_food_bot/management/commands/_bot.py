@@ -15,7 +15,12 @@ from ._bot_functions import (
     start,
     input_user_name,
     input_phone_number,
-    main_menu_handler)
+    main_menu_handler,
+    profile_handler,
+    settings_handler,
+    random_recipe_handler,
+    liked_dishes,
+    user_settings)
 
 env = Env()
 env.read_env()
@@ -69,6 +74,11 @@ def handle_users_reply(update, context):
         'INPUT_USER_NAME': input_user_name,
         'INPUT_PHONE_NUMBER': input_phone_number,
         'MAIN_MENU': main_menu_handler,
+        'PROFILE': profile_handler,
+        'SETTINGS': settings_handler,
+        'RANDOM_RECIPE': random_recipe_handler,
+        'LIKED_DISHES': liked_dishes,
+        'USER_SETTINGS': user_settings,
     }
 
     print(user_state)
