@@ -39,21 +39,21 @@ def profile_keyboard():
 def random_recipe_keyboard():
     inline_keyboard = [
         [
-            InlineKeyboardButton('Лайк', callback_data='like'),
+            InlineKeyboardButton('Сохранить', callback_data='like'),
             InlineKeyboardButton('Следующий', callback_data='next'),
-            InlineKeyboardButton('Дизлайк', callback_data='dislike')],
+            InlineKeyboardButton('Не показывать', callback_data='dislike')],
         [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup
 
 
-def liked_recipe_keyboard():
+def liked_random_recipe_keyboard():
     inline_keyboard = [
         [
-            InlineKeyboardButton('Убрать из любимых', callback_data='unlike'),
+            InlineKeyboardButton('Сохранено. Удалить?', callback_data='unlike'),
             InlineKeyboardButton('Следующий', callback_data='next'),
-            InlineKeyboardButton('Дизлайк', callback_data='dislike')],
+            InlineKeyboardButton('Не показывать', callback_data='dislike')],
         [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)

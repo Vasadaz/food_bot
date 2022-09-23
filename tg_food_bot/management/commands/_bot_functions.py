@@ -6,7 +6,7 @@ from ._keyboards import (
     main_menu_keyboard,
     profile_keyboard,
     random_recipe_keyboard,
-    liked_recipe_keyboard,
+    liked_random_recipe_keyboard,
 )
 
 
@@ -211,14 +211,21 @@ def settings_handler(update, context):
 def random_recipe_handler(update, context):
     query = update.callback_query
     chat_id = query.message.chat.id
+    message_id = query.message.message_id
 
     if query.data == 'like':
-        message_text = 'Рецепт добавлен в "Любимые"'
-
-        context.bot.send_message(
+        context.bot.edit_message_reply_markup(
             chat_id=chat_id,
-            text=message_text,
-            reply_markup=liked_recipe_keyboard()
+            message_id=message_id,
+            reply_markup=liked_random_recipe_keyboard()
+        )
+        return 'RANDOM_RECIPE'
+
+    elif query.data == 'unlike':
+        context.bot.edit_message_reply_markup(
+            chat_id=chat_id,
+            message_id=message_id,
+            reply_markup=random_recipe_keyboard()
         )
         return 'RANDOM_RECIPE'
 
@@ -230,6 +237,10 @@ def random_recipe_handler(update, context):
             text=message_text,
             reply_markup=random_recipe_keyboard()
         )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
+        )
         return 'RANDOM_RECIPE'
 
     elif query.data == 'next':
@@ -240,15 +251,9 @@ def random_recipe_handler(update, context):
             text=message_text,
             reply_markup=random_recipe_keyboard()
         )
-        return 'RANDOM_RECIPE'
-
-    elif query.data == 'unlike':
-        message_text = 'Рецепт добавлен в "Любимые"'
-
-        context.bot.send_message(
-            chat_id=chat_id,
-            text=message_text,
-            reply_markup=random_recipe_keyboard()
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
         )
         return 'RANDOM_RECIPE'
 
@@ -259,6 +264,10 @@ def random_recipe_handler(update, context):
             chat_id=chat_id,
             text=message_text,
             reply_markup=main_menu_keyboard()
+        )
+        context.bot.delete_message(
+            chat_id=query.message.chat.id,
+            message_id=query.message.message_id
         )
         return 'PROFILE'
 
