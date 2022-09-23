@@ -1,7 +1,13 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def start(update, context):
-    chat_id = update.message.chat.id
+    try:
+        query = update.callback_query
+        chat_id = query.message.chat.id
+        message_id = query.message.message_id
+    except:
+        chat_id = update.message.chat_id
+        message_id = update.message.message_id
 
     inline_keyboard = [
         [InlineKeyboardButton('Принять', callback_data='agree')],
@@ -20,7 +26,7 @@ def start(update, context):
     )
     context.bot.delete_message(
         chat_id=chat_id,
-        message_id=update.message.message_id
+        message_id=message_id
     )
 
     return 'INPUT_USER_NAME'
@@ -45,10 +51,17 @@ def input_user_name(update, context):
         return 'INPUT_PHONE_NUMBER'
 
     elif query.data == 'disagree':
-        message_text = 'Очень жаль, что вы не с нами. Если передумаете - введите /start'
+        message_text = 'Очень жаль, что вы не с нами. Если передумаете - нажмите кнопку'
+
+        inline_keyboard = [
+            [InlineKeyboardButton('Кнопка', callback_data='start')],
+        ]
+        inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
+
         context.bot.send_message(
             chat_id=query.message.chat.id,
             text=message_text,
+            reply_markup=inline_kb_markup
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
