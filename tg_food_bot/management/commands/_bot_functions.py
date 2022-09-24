@@ -101,8 +101,10 @@ def main_menu_handler(update, context):
     try:
         query = update.callback_query
         chat_id = query.message.chat.id
+        message_id = query.message.message_id
     except:
         chat_id = update.message.chat_id
+        message_id = update.message.message_id
 
     message_text = 'Выберите действие:'
 
@@ -113,11 +115,11 @@ def main_menu_handler(update, context):
     )
     context.bot.delete_message(
         chat_id=chat_id,
-        message_id=update.message.message_id
+        message_id=message_id
     )
     context.bot.delete_message(
         chat_id=chat_id,
-        message_id=update.message.message_id - 1
+        message_id=message_id - 1
     )
 
     return 'PROFILE'
