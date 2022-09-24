@@ -101,8 +101,10 @@ def main_menu_handler(update, context):
     try:
         query = update.callback_query
         chat_id = query.message.chat.id
+        message_id = query.message.message_id
     except:
         chat_id = update.message.chat_id
+        message_id = update.message.message_id
 
     message_text = 'Выберите действие:'
 
@@ -113,11 +115,11 @@ def main_menu_handler(update, context):
     )
     context.bot.delete_message(
         chat_id=chat_id,
-        message_id=update.message.message_id
+        message_id=message_id
     )
     context.bot.delete_message(
         chat_id=chat_id,
-        message_id=update.message.message_id - 1
+        message_id=message_id - 1
     )
 
     return 'PROFILE'
@@ -232,8 +234,6 @@ def random_recipe_handler(update, context):
         return 'RANDOM_RECIPE'
 
     elif query.data == 'dislike':
-        message_text = 'Рецепт убран из выдачи, попробуйте этот рецепт (реализовать отображение нового рецепта)'
-
         dish = get_random_dish()
         dish_content = get_dish_content(dish)
 
@@ -257,8 +257,6 @@ def random_recipe_handler(update, context):
         return 'RANDOM_RECIPE'
 
     elif query.data == 'next':
-        message_text = 'Новый рецепт (реализовать отображение нового рецепта)'
-
         dish = get_random_dish()
         dish_content = get_dish_content(dish)
 
