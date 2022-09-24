@@ -232,8 +232,6 @@ def random_recipe_handler(update, context):
         return 'RANDOM_RECIPE'
 
     elif query.data == 'dislike':
-        message_text = 'Рецепт убран из выдачи, попробуйте этот рецепт (реализовать отображение нового рецепта)'
-
         dish = get_random_dish()
         dish_content = get_dish_content(dish)
 
@@ -257,8 +255,6 @@ def random_recipe_handler(update, context):
         return 'RANDOM_RECIPE'
 
     elif query.data == 'next':
-        message_text = 'Новый рецепт (реализовать отображение нового рецепта)'
-
         dish = get_random_dish()
         dish_content = get_dish_content(dish)
 
