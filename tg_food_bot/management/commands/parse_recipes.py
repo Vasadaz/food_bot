@@ -1,3 +1,5 @@
+import random
+
 from django.core.management.base import BaseCommand
 
 import json
@@ -16,6 +18,24 @@ CATEGORIES = {
     'salad': 'Салаты',
     'no_diet': None,
 }
+
+
+def add_random_categories(category_key: str) -> list:
+    global CATEGORIES
+    import random
+
+    static_category = CATEGORIES[category_key]
+
+    if not static_category:
+        return [static_category]
+
+    categories = list(CATEGORIES.values())
+    categories.extend([None] * 20)
+    random_categories = random.sample(categories, k=1)
+    if static_category not in random_categories:
+        random_categories.append(CATEGORIES[category_key])
+
+    return random_categories
 
 
 def create_directory(save_dir):
@@ -61,34 +81,18 @@ def parse_recipe(response, category, image_save_path):
     image_url = soup_of_recipe.select_one('.bigImgBox a img')['src']
     image_path = download_image(image_url, title, image_save_path)
 
+    random_price = random.choice([None, 200, 350, 500, 750, 1000])
+
     recipe = {
         'title': title,
         'categories': add_random_categories(category),
         'description': description,
         'ingredients': ingredients,
         'recipe': cooking_steps,
+        'price': random_price,
         'image': str(image_path),
     }
     return recipe
-
-
-def add_random_categories(category_key: str) -> list:
-    global CATEGORIES
-    import random
-
-    static_category = CATEGORIES[category_key]
-
-    if not static_category:
-        return [static_category]
-
-    categories = list(CATEGORIES.values())
-    categories.remove(None)
-    random_number = random.randrange(len(categories))
-    random_categories = random.sample(categories, random_number)
-    if static_category not in random_categories:
-        random_categories.append(CATEGORIES[category_key])
-
-    return random_categories
 
 
 def main():

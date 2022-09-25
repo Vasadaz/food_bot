@@ -28,6 +28,7 @@ def add_dish(dish: dict):
             image=dish['image'],
             ingredients='\n'.join(dish['ingredients']),
             recipe='\n'.join(dish['recipe']),
+            price=dish['price']
         )
         dish_obj.save()
 

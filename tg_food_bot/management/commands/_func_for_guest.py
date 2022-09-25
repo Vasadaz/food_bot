@@ -87,6 +87,11 @@ def remove_like(guest: Guest, dish: Dish):
     guest.likes.remove(dish)
 
 
+def set_budget(guest: Guest, budget: int):
+    guest.budget = budget
+    guest.save()
+
+
 def set_dislike(guest: Guest, dish: Dish):
     remove_like(guest, dish)
     guest.dislikes.add(dish)
