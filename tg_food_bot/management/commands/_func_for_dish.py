@@ -15,15 +15,18 @@ def get_dish_content(dish):
 
 
 def get_random_dish(guest: Guest):
-    guest_categories = guest.priority_categories
-    guest_dislikes = guest.dislikes
-    print('-' * 10)
-    print(guest_categories)
-    print(guest_dislikes)
-    print('-' * 10)
+    guest_categories = guest.priority_categories.all()
+    guest_dislikes = guest.dislikes.all()
+    guest_likes = guest.likes.all()
+
+    if not guest_categories:
+        guest_categories = Category.objects.all()
+
     dishes = Dish.objects.filter(
         active=True,
-        categories=guest_categories,
+        categories__in=guest_categories,
+    ).exclude(
+        title__in=guest_dislikes | guest_likes,
     )
 
     dish = random.choice(dishes)

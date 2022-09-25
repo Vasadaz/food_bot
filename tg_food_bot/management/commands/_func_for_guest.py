@@ -62,7 +62,7 @@ def remove_categories_of_guest(guest: Guest):
 
 
 def remove_dislike(guest: Guest, dish: Dish):
-    guest.likes.remove(dish)
+    guest.dislikes.remove(dish)
 
 
 def remove_like(guest: Guest, dish: Dish):
@@ -70,8 +70,10 @@ def remove_like(guest: Guest, dish: Dish):
 
 
 def set_dislike(guest: Guest, dish: Dish):
+    remove_like(guest, dish)
     guest.dislikes.add(dish)
 
 
 def set_like(guest: Guest, dish: Dish):
+    remove_dislike(guest, dish)
     guest.likes.add(dish)
