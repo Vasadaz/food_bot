@@ -58,7 +58,7 @@ print(f'{guest_data["name"]} - Проверка ликвидности номе�
 print(f'{guest_data["name"]} - Добавление номера гостю:\n {add_guest_phonenumber(guest, "89876543210") = }\n')
 
 budget = random.choice([None, 200, 350, 500, 750, 1000])
-print(f'{guest_data["name"]} - Добавление бюджета {budget}р гостю:\n {add_guest_phonenumber(guest, "89876543210") = }\n')
+print(f'{guest_data["name"]} - Добавление бюджета {budget} ₽ гостю:\n {add_guest_phonenumber(guest, "89876543210") = }\n')
 
 print(f'{guest_data["name"]} - Получить гостя:\n {get_guest(guest_data["telegram_id"]) = }\n')
 
