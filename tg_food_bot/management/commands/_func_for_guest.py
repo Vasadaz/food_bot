@@ -44,6 +44,24 @@ def get_guest(telegram_id: int) -> Guest:
     return guest
 
 
+def get_guest_categories(guest: Guest) -> Guest:
+    guest_categories = guest.priority_categories.all()
+
+    return guest_categories
+
+
+def get_guest_dislikes(guest: Guest) -> Guest:
+    guest_dislikes = guest.dislikes.all()
+
+    return guest_dislikes
+
+
+def get_guest_likes(guest: Guest) -> Guest:
+    guest_likes = guest.likes.all()
+
+    return guest_likes
+
+
 def normalize_owners_phonenumber(phonenumber: str):
     normalization_number = phonenumbers.parse(phonenumber, 'RU')
     international_number = phonenumbers.format_number(

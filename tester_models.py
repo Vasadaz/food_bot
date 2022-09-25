@@ -16,6 +16,9 @@ from tg_food_bot.management.commands._func_for_guest import (
     add_guest_phonenumber,
     add_categories_to_guest,
     get_guest,
+    get_guest_categories,
+    get_guest_dislikes,
+    get_guest_likes,
     add_new_categories_to_guest,
     normalize_owners_phonenumber,
     remove_categories_of_guest,
@@ -66,9 +69,13 @@ print(f'{guest_data["name"]} - Установить новые категори�
 
 print(f'{guest_data["name"]} - Удалить все категории у гостя:\n { remove_categories_of_guest(guest) = }\n')
 
+print(f'{guest_data["name"]} - Посмотреть категории гостя :\n {get_guest_categories(guest) = }\n')
+
 select_categories = random.choices(categories, k=2)
 print(f'{guest_data["name"]} - Добавить категории {select_categories} для гостя:\n '
       f'{add_categories_to_guest(guest, select_categories) = }\n')
+
+print(f'{guest_data["name"]} - Посмотреть категории гостя :\n {get_guest_categories(guest) = }\n')
 
 print(f'{guest_data["name"]} - Получить случайное блюдо по выбранным категориям (блюда из likes и dislikes исключаются):\n '
       f'{ get_random_dish(guest) = }\n')
@@ -96,3 +103,6 @@ print(f'{guest_data["name"]} - Поставить дизлайк блюду {dis
 
 print(f'{guest_data["name"]} - Убрать лайк блюду {dish_2 = }:\n { remove_like(guest, dish_2) = }\n')
 print(f'{guest_data["name"]} - Убрать дизлайк блюду {dish_5 = }:\n { remove_dislike(guest, dish_5) = }\n')
+
+print(f'{guest_data["name"]} - Посмотреть лайки гостя :\n {get_guest_likes(guest) = }\n')
+print(f'{guest_data["name"]} - Посмотреть дизлайки гостя :\n {get_guest_dislikes(guest) = }\n')
