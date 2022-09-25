@@ -1,4 +1,5 @@
 from django.db import models
+from djmoney.models.fields import MoneyField
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -50,6 +51,14 @@ class Dish(models.Model):
         blank=True,
         null=True,
     )
+    price = MoneyField(
+        verbose_name='Цена порции',
+        blank=True,
+        decimal_places=0,
+        default_currency='RUB',
+        max_digits=4,
+        null=True,
+    )
     active = models.BooleanField(
         verbose_name='Показывать блюдо',
         db_index=True,
@@ -89,6 +98,14 @@ class Guest(models.Model):
         blank=True,
         related_name='guests',
     )
+    budget = MoneyField(
+        verbose_name='Бюджет',
+        blank=True,
+        decimal_places=0,
+        default_currency='RUB',
+        max_digits=4,
+        null=True,
+    )
     likes = models.ManyToManyField(
         Dish,
         verbose_name='Любимые рецепты',
@@ -110,5 +127,3 @@ class Guest(models.Model):
 
     def __str__(self):
         return self.name
-
-
