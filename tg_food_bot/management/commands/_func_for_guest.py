@@ -93,7 +93,12 @@ def remove_like(guest: Guest, dish: Dish):
     guest.likes.remove(dish)
 
 
-def set_budget(guest: Guest, budget: int):
+def remove_budget(guest: Guest):
+    guest.budget = None
+    guest.save()
+
+
+def change_budget(guest: Guest, budget: int):
     guest.budget = budget
     guest.save()
 

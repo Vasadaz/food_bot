@@ -23,6 +23,7 @@ from ._bot_functions import (
     user_settings,
     liked_dish,
     save_phone,
+    user_budget_handler,
 )
 
 env = Env()
@@ -84,7 +85,7 @@ def handle_users_reply(update, context):
         'USER_SETTINGS': user_settings,
         'LIKED_DISH': liked_dish,
         'SAVE_PHONE': save_phone,
-
+        'BUDGET': user_budget_handler,
     }
 
     print(user_state)

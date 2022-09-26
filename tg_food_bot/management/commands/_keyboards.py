@@ -33,6 +33,7 @@ def profile_keyboard():
     inline_keyboard = [
         [InlineKeyboardButton('Любимые рецепты', callback_data='liked_recipes')],
         [InlineKeyboardButton('Выбор категорий', callback_data='settings')],
+        [InlineKeyboardButton('Выбор бюджета', callback_data='budget')],
         [InlineKeyboardButton('Главное меню', callback_data='main_menu')]
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
@@ -117,6 +118,7 @@ def categories_keyboard(chat_id):
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup
 
+
 def no_random_keyboard():
     inline_keyboard = [
         [
@@ -124,5 +126,31 @@ def no_random_keyboard():
             InlineKeyboardButton('Главное меню', callback_data='main_menu')
         ]
     ]
+    inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
+    return inline_kb_markup
+
+
+def budget_keyboard(chat_id):
+    guest = get_guest(telegram_id=chat_id)
+    if guest.budget:
+        guest_budget = int(guest.budget.amount)
+    else:
+        guest_budget = None
+    budgets = [200, 350, 500, 750, 1000]
+
+    inline_keyboard = []
+    for budget in budgets:
+        if budget == guest_budget:
+            inline_keyboard.append([InlineKeyboardButton(f'{budget} \U00002705', callback_data=budget)])
+        else:
+            inline_keyboard.append([InlineKeyboardButton(f'{budget}', callback_data=budget)])
+
+    inline_keyboard.append(
+        [
+            InlineKeyboardButton('Сбросить', callback_data='del_user_budget'),
+            InlineKeyboardButton('Главное меню', callback_data='main_menu')
+        ]
+    )
+
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup

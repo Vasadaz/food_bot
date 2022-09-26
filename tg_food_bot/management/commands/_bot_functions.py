@@ -13,7 +13,8 @@ from ._keyboards import (
     categories_keyboard,
     liked_dish_keyboard,
     unliked_dish_keyboard,
-    no_random_keyboard
+    no_random_keyboard,
+    budget_keyboard,
 )
 
 from ._func_for_dish import (
@@ -33,7 +34,9 @@ from ._func_for_guest import (
     remove_like,
     get_guest_likes,
     remove_categories_of_guest,
-    change_category_to_guest
+    change_category_to_guest,
+    change_budget,
+    remove_budget,
 )
 
 env = Env()
@@ -309,6 +312,20 @@ def settings_handler(update, context):
             message_id=query.message.message_id
         )
         return 'USER_SETTINGS'
+
+    elif query.data == 'budget':
+        message_text = 'Выберите максимальную стоимость порции.'
+
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message_text,
+            reply_markup=budget_keyboard(chat_id)
+        )
+        context.bot.delete_message(
+            chat_id=chat_id,
+            message_id=query.message.message_id
+        )
+        return 'BUDGET'
 
     elif query.data == 'main_menu':
         message_text = 'Выберите действие:'
@@ -586,3 +603,45 @@ def user_settings(update, context):
             reply_markup=categories_keyboard(chat_id)
         )
         return 'USER_SETTINGS'
+
+
+def user_budget_handler(update, context):
+    query = update.callback_query
+    chat_id = query.message.chat.id
+    message_id = query.message.message_id
+    guest = get_guest(telegram_id=chat_id)
+
+    if query.data == 'main_menu':
+        message_text = 'Добро пожаловать в главное меню.'
+
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message_text,
+            reply_markup=main_menu_keyboard()
+        )
+        context.bot.delete_message(
+            chat_id=chat_id,
+            message_id=query.message.message_id
+        )
+        return 'PROFILE'
+
+    elif query.data == 'del_user_budget':
+        remove_budget(guest)
+
+        context.bot.edit_message_reply_markup(
+            chat_id=chat_id,
+            message_id=message_id,
+            reply_markup=budget_keyboard(chat_id)
+        )
+        return 'BUDGET'
+
+    else:
+        budget = query.data
+        change_budget(guest, budget)
+
+        context.bot.edit_message_reply_markup(
+            chat_id=chat_id,
+            message_id=message_id,
+            reply_markup=budget_keyboard(chat_id)
+        )
+        return 'BUDGET'
