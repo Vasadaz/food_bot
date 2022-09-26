@@ -31,22 +31,9 @@ from ._func_for_guest import (
     set_dislike,
     remove_like,
     get_guest_likes,
-    get_guest_categories,
     remove_categories_of_guest,
     change_category_to_guest
 )
-
-# guest_db = f'guest_tg_{chat_id}'
-# ---------------------------------------
-# _database.set(
-#     guest_db,
-#     json.dumps({
-#         'dish': dish,
-#     })
-# )
-# --------------------------------------
-# speaker_id = json.loads(_database.get(guest_db))
-#
 
 env = Env()
 env.read_env()
@@ -104,18 +91,18 @@ def start(update, context):
 
 def input_user_name(update, context):
     query = update.callback_query
-
+    chat_id = update.message.chat_id
     if query.data == 'agree':
         context.bot.send_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             text='Введите ваше имя:',
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id + 1
         )
         return 'INPUT_PHONE_NUMBER'
@@ -125,16 +112,16 @@ def input_user_name(update, context):
 
         delete_guest(query.message.chat.id)
         context.bot.send_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             text=message_text,
             reply_markup=disagree_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id + 1
         )
         return 'START'
@@ -171,15 +158,15 @@ def save_phone(update, context):
 
     if not phonenumber_accepted:
         context.bot.send_message(
-            chat_id=update.message.chat.id,
+            chat_id=chat_id,
             text='Неверный номер. Пожалуйста, введите номер в формате "+79990000000" или "9990000000"',
         )
         context.bot.delete_message(
-            chat_id=update.message.chat.id,
+            chat_id=chat_id,
             message_id=update.message.message_id
         )
         context.bot.delete_message(
-            chat_id=update.message.chat.id,
+            chat_id=chat_id,
             message_id=update.message.message_id - 1
         )
         return 'SAVE_PHONE'
@@ -237,7 +224,7 @@ def profile_handler(update, context):
             reply_markup=profile_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         return 'SETTINGS'
@@ -263,7 +250,7 @@ def profile_handler(update, context):
             reply_markup=random_recipe_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         return 'RANDOM_RECIPE'
@@ -292,8 +279,6 @@ def settings_handler(update, context):
         return 'LIKED_DISHES'
 
     elif query.data == 'settings':
-        # guest_categories = get_guest_categories(guest)
-        # format_categories = ', '.join([category.title for category in guest_categories])
         message_text = f'Выберите интересующие Вас категории блюд'
 
         context.bot.send_message(
@@ -302,7 +287,7 @@ def settings_handler(update, context):
             reply_markup=categories_keyboard(chat_id)
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         return 'USER_SETTINGS'
@@ -316,7 +301,7 @@ def settings_handler(update, context):
             reply_markup=main_menu_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         return 'PROFILE'
@@ -377,11 +362,11 @@ def random_recipe_handler(update, context):
             reply_markup=random_recipe_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id - 1
         )
         return 'RANDOM_RECIPE'
@@ -406,11 +391,11 @@ def random_recipe_handler(update, context):
             reply_markup=random_recipe_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id - 1
         )
         return 'RANDOM_RECIPE'
@@ -424,11 +409,11 @@ def random_recipe_handler(update, context):
             reply_markup=main_menu_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id - 1
         )
         return 'PROFILE'
@@ -446,7 +431,7 @@ def liked_dishes(update, context):
             reply_markup=main_menu_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         return 'PROFILE'
@@ -474,7 +459,7 @@ def liked_dishes(update, context):
             reply_markup=liked_dish_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         return 'LIKED_DISH'
@@ -496,11 +481,11 @@ def liked_dish(update, context):
             reply_markup=main_menu_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id - 1
         )
         return 'PROFILE'
@@ -545,7 +530,7 @@ def user_settings(update, context):
             reply_markup=main_menu_keyboard()
         )
         context.bot.delete_message(
-            chat_id=query.message.chat.id,
+            chat_id=chat_id,
             message_id=query.message.message_id
         )
         return 'PROFILE'
@@ -570,48 +555,3 @@ def user_settings(update, context):
             reply_markup=categories_keyboard(chat_id)
         )
         return 'USER_SETTINGS'
-
-
-# def user_categories(update, context):
-#     query = update.callback_query
-#     chat_id = query.message.chat.id
-#     message_id = query.message.message_id
-#     guest = get_guest(telegram_id=chat_id)
-#
-#     if query.data == 'main_menu':
-#         message_text = 'Выберите действие:'
-#
-#         context.bot.send_message(
-#             chat_id=chat_id,
-#             text=message_text,
-#             reply_markup=main_menu_keyboard()
-#         )
-#         context.bot.delete_message(
-#             chat_id=query.message.chat.id,
-#             message_id=query.message.message_id
-#         )
-#         return 'PROFILE'
-#
-#     elif query.data == 'del_user_categories':
-#         remove_categories_of_guest(guest)
-#         message = 'Все категории сброшены. Сейчас у вас не выбрано ни одной категории'
-#         context.bot.edit_message_reply_markup(
-#             chat_id=chat_id,
-#             message_id=message_id,
-#             message=message
-#         )
-#
-#     else:
-#         category_title = query.data
-#         change_category_to_guest(guest, category_title)
-#
-#         context.bot.edit_message_reply_markup(
-#             chat_id=chat_id,
-#             message_id=message_id,
-#             reply_markup=categories_keyboard(chat_id)
-#         )
-#         context.bot.delete_message(
-#             chat_id=query.message.chat.id,
-#             message_id=query.message.message_id
-#         )
-#         return 'USER_CATEGORIES'

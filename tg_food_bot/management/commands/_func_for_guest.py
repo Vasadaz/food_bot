@@ -3,15 +3,6 @@ import phonenumbers
 from tg_food_bot.models import Category, Dish, Guest
 
 
-def add_categories_to_guest(guest: Guest, categories: list):
-    for category in categories:
-        if category:
-            category_obj = Category.objects.get(
-                title=category,
-            )
-            guest.priority_categories.add(category_obj)
-
-
 def change_category_to_guest(guest: Guest, category: str):
     category_obj = Category.objects.get(
         title=category,
@@ -21,8 +12,6 @@ def change_category_to_guest(guest: Guest, category: str):
     else:
         guest.priority_categories.add(category_obj)
 
-# def remove_category_from_guest(guest: Guest, category: str):
-#     guest.priority_categories.remove(category)
 
 def create_guest(telegram_id: int):
     guest, created = Guest.objects.get_or_create(
@@ -50,11 +39,6 @@ def add_guest_phonenumber(guest: Guest, phonenumber: str):
         guest.phonenumber = normalize_owners_phonenumber(phonenumber)
         guest.save()
         return True
-
-
-def add_new_categories_to_guest(guest: Guest, categories: list):
-    remove_categories_of_guest(guest)
-    add_categories_to_guest(guest, categories)
 
 
 def get_guest(telegram_id: int) -> Guest:

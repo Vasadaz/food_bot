@@ -44,7 +44,7 @@ def random_recipe_keyboard():
         [
             InlineKeyboardButton('Сохранить', callback_data='like'),
             InlineKeyboardButton('Следующий', callback_data='next'),
-            InlineKeyboardButton('Не показывать', callback_data='dislike')],
+            InlineKeyboardButton('Скрыть \U0000274C', callback_data='dislike')],
         [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
@@ -54,9 +54,9 @@ def random_recipe_keyboard():
 def liked_random_recipe_keyboard():
     inline_keyboard = [
         [
-            InlineKeyboardButton('Сохранено. Удалить?', callback_data='unlike'),
+            InlineKeyboardButton('Сохранено. \U00002705', callback_data='unlike'),
             InlineKeyboardButton('Следующий', callback_data='next'),
-            InlineKeyboardButton('Не показывать', callback_data='dislike')],
+            InlineKeyboardButton('Скрыть \U0000274C', callback_data='dislike')],
         [InlineKeyboardButton('Главное меню', callback_data='main_menu')],
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
@@ -79,7 +79,7 @@ def liked_dishes_keyboard(chat_id):
 def liked_dish_keyboard():
     inline_keyboard = [
         [
-            InlineKeyboardButton('Удалить', callback_data='delete'),
+            InlineKeyboardButton('Удалить \U0000274C', callback_data='delete'),
             InlineKeyboardButton('Главное меню', callback_data='main_menu')
         ]
     ]
