@@ -20,24 +20,6 @@ CATEGORIES = {
 }
 
 
-def add_random_categories(category_key: str) -> list:
-    global CATEGORIES
-    import random
-
-    static_category = CATEGORIES[category_key]
-
-    if not static_category:
-        return [static_category]
-
-    categories = list(CATEGORIES.values())
-    categories.extend([None] * 20)
-    random_categories = random.sample(categories, k=1)
-    if static_category not in random_categories:
-        random_categories.append(CATEGORIES[category_key])
-
-    return random_categories
-
-
 def create_directory(save_dir):
     dir_path = Path(save_dir)
     Path.mkdir(dir_path, parents=True, exist_ok=True)
@@ -65,7 +47,9 @@ def parse_recipes_urls(response, url):
     return recipes_urls
 
 
-def parse_recipe(response, category, image_save_path):
+def parse_recipe(response, category_key, image_save_path):
+    global CATEGORIES
+
     soup = BeautifulSoup(response, 'lxml')
     soup_of_recipe = soup.select_one('.mcol')
 
@@ -81,11 +65,13 @@ def parse_recipe(response, category, image_save_path):
     image_url = soup_of_recipe.select_one('.bigImgBox a img')['src']
     image_path = download_image(image_url, title, image_save_path)
 
-    random_price = random.choice([None, 200, 350, 500, 750, 1000])
+    random_price = random.choice([200, 350, 500, 750, 1000])
+
+    categories = [CATEGORIES[category_key]]
 
     recipe = {
         'title': title,
-        'categories': add_random_categories(category),
+        'categories': categories,
         'description': description,
         'ingredients': ingredients,
         'recipe': cooking_steps,

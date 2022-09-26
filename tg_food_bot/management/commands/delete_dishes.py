@@ -16,7 +16,7 @@ def delete_dish(dish: dict):
     try:
         dish_obj = Dish.objects.get(title=title)
     except ObjectDoesNotExist:
-        print('Not found dish:', title)
+        print('\033[91mNot found dish:\033[0m', title)
         return
     dish_obj.delete()
     print('Delete dish:', title)

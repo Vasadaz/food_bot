@@ -19,24 +19,30 @@ def add_categories_to_dish(dish_obj, categories: list):
             dish_obj.categories.add(category_obj)
 
 
-def add_dish(dish: dict):
-    title = dish['title']
+def add_dish(dish_notes: dict):
+    categories = dish_notes['categories']
+    title = dish_notes['title']
 
-    if not Dish.objects.filter(title=title):
+    dish_obj, created  = Dish.objects.get_or_create(
+                title=title,
+            )
+
+    if created:
         dish_obj = Dish(
             title=title,
-            image=dish['image'],
-            ingredients='\n'.join(dish['ingredients']),
-            recipe='\n'.join(dish['recipe']),
-            price=dish['price']
+            image=dish_notes['image'],
+            ingredients='\n'.join(dish_notes['ingredients']),
+            recipe='\n'.join(dish_notes['recipe']),
+            price=dish_notes['price']
         )
         dish_obj.save()
 
-        add_categories_to_dish(dish_obj, dish['categories'])
+        add_categories_to_dish(dish_obj, categories)
 
         print('Add dish:', dish_obj)
     else:
-        print('DUBLLE:', title)
+        add_categories_to_dish(dish_obj, categories)
+        print(f'\033[93mDOUBLE:\033[92m set categories \033[0m{dish_obj.categories.all()}\033[92m for \033[0m{dish_obj}\033[0m')
 
 
 def main():
