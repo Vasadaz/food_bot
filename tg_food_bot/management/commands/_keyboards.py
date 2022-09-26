@@ -14,7 +14,7 @@ def start_keyboard():
 
 def disagree_keyboard():
     inline_keyboard = [
-        [InlineKeyboardButton('Кнопка', callback_data='start')],
+        [InlineKeyboardButton('Вернуться', callback_data='start')],
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup
@@ -22,7 +22,7 @@ def disagree_keyboard():
 
 def main_menu_keyboard():
     inline_keyboard = [
-        [InlineKeyboardButton('Рецепт', callback_data='recipe')],
+        [InlineKeyboardButton('Случайный рецепт', callback_data='recipe')],
         [InlineKeyboardButton('Личный кабинет', callback_data='profile')]
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
@@ -32,7 +32,7 @@ def main_menu_keyboard():
 def profile_keyboard():
     inline_keyboard = [
         [InlineKeyboardButton('Любимые рецепты', callback_data='liked_recipes')],
-        [InlineKeyboardButton('Настройки', callback_data='settings')],
+        [InlineKeyboardButton('Выбор категорий', callback_data='settings')],
         [InlineKeyboardButton('Главное меню', callback_data='main_menu')]
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
@@ -109,8 +109,10 @@ def categories_keyboard(chat_id):
         else:
             inline_keyboard.append([InlineKeyboardButton(f'{category}', callback_data=f'{category}')])
 
-    inline_keyboard.append([InlineKeyboardButton('Сбросить', callback_data='del_user_categories')])
-    inline_keyboard.append([InlineKeyboardButton('Главное меню', callback_data='main_menu')])
+    inline_keyboard.append(
+        [InlineKeyboardButton('Сбросить', callback_data='del_user_categories'),
+         InlineKeyboardButton('Главное меню', callback_data='main_menu')]
+    )
 
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup
@@ -118,7 +120,7 @@ def categories_keyboard(chat_id):
 def no_random_keyboard():
     inline_keyboard = [
         [
-            InlineKeyboardButton('Настройки', callback_data='settings'),
+            InlineKeyboardButton('Выбор категорий', callback_data='settings'),
             InlineKeyboardButton('Главное меню', callback_data='main_menu')
         ]
     ]

@@ -76,9 +76,14 @@ def start(update, context):
     with open('static/any_file.pdf', 'rb') as file:
         context.bot.send_document(chat_id=chat_id, document=file)
 
+    message_text = '''
+Привет! Данный бот создан для того, чтобы разнообразить Ваше повседневное меню новыми блюдами. 
+В нём Вы сможете просматривать случайные рецепты, выбрать категории интересующих Вас блюд и сохранить понравившеися.
+Для начала работы с ботом нужно принять соглашение на обработку персональных данных.'''
+
     context.bot.send_message(
         chat_id=chat_id,
-        text='Привет! Для начала работы с ботом нужно принять соглашение на обработку персональных данных',
+        text=message_text,
         reply_markup=start_keyboard()
     )
     context.bot.delete_message(
@@ -108,7 +113,7 @@ def input_user_name(update, context):
         return 'INPUT_PHONE_NUMBER'
 
     elif query.data == 'disagree':
-        message_text = 'Очень жаль, что вы не с нами. Если передумаете - нажмите кнопку'
+        message_text = 'Очень жаль, что Вы не с нами. Если передумаете - нажмите кнопку.'
 
         delete_guest(query.message.chat.id)
         context.bot.send_message(
@@ -136,7 +141,7 @@ def input_phone_number(update, context):
 
     context.bot.send_message(
         chat_id=chat_id,
-        text='Введите номер телефона:',
+        text='Введите номер телефона (пример: +79001234567):',
     )
     context.bot.delete_message(
         chat_id=chat_id,
@@ -171,7 +176,7 @@ def save_phone(update, context):
         )
         return 'SAVE_PHONE'
     else:
-        message_text = 'Выберите действие:'
+        message_text = 'Добро пожаловать в главное меню.'
 
         context.bot.send_message(
             chat_id=chat_id,
@@ -216,7 +221,7 @@ def profile_handler(update, context):
     guest_db = f'guest_tg_{chat_id}'
 
     if query.data == 'profile':
-        message_text = 'Выберите действие:'
+        message_text = 'Добро пожаловать в главное меню.'
 
         context.bot.send_message(
             chat_id=chat_id,
@@ -231,7 +236,7 @@ def profile_handler(update, context):
 
     elif query.data == 'recipe':
         if not get_random_dish(guest):
-            message = 'Нет блюд, соответствующих всем выбранным категориям'
+            message = 'Нет блюд, соответствующих всем выбранным категориям.'
             context.bot.send_message(
                 chat_id=chat_id,
                 text=message,
@@ -449,7 +454,7 @@ def liked_dishes(update, context):
     query = update.callback_query
     chat_id = query.message.chat.id
     if query.data == 'main_menu':
-        message_text = 'Выберите действие:'
+        message_text = 'Добро пожаловать в главное меню.'
 
         context.bot.send_message(
             chat_id=chat_id,
@@ -499,7 +504,7 @@ def liked_dish(update, context):
     guest_db = f'guest_tg_{chat_id}'
 
     if query.data == 'main_menu':
-        message_text = 'Выберите действие:'
+        message_text = 'Добро пожаловать в главное меню.'
 
         context.bot.send_message(
             chat_id=chat_id,
@@ -548,7 +553,7 @@ def user_settings(update, context):
     guest = get_guest(telegram_id=chat_id)
 
     if query.data == 'main_menu':
-        message_text = 'Выберите действие:'
+        message_text = 'Добро пожаловать в главное меню.'
 
         context.bot.send_message(
             chat_id=chat_id,
