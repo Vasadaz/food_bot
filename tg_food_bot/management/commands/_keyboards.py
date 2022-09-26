@@ -1,5 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+from ._func_for_guest import get_guest_likes, get_guest
+
 def start_keyboard():
     inline_keyboard = [
         [InlineKeyboardButton('Принять', callback_data='agree')],
@@ -60,14 +62,14 @@ def liked_random_recipe_keyboard():
     return inline_kb_markup
 
 
-def liked_dishes_keyboard():
-    '''Генератор кнопок с любимыми блюдами '''
+def liked_dishes_keyboard(chat_id):
+    guest = get_guest(telegram_id=chat_id)
+    dishes = get_guest_likes(guest)
+
     inline_keyboard = [
-            [InlineKeyboardButton('1', callback_data='dish')],
-            [InlineKeyboardButton('2', callback_data='dish')],
-            [InlineKeyboardButton('3', callback_data='dish')],
-            [InlineKeyboardButton('Главное меню', callback_data='main_menu')]
+            [InlineKeyboardButton(f'{dish.title}', callback_data=f'{dish.title}')] for dish in dishes
     ]
+    inline_keyboard.append([InlineKeyboardButton('Главное меню', callback_data='main_menu')])
 
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup
@@ -82,6 +84,18 @@ def liked_dish_keyboard():
     ]
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup
+
+
+def unliked_dish_keyboard():
+    inline_keyboard = [
+        [
+            InlineKeyboardButton('Сохранить', callback_data='save'),
+            InlineKeyboardButton('Главное меню', callback_data='main_menu')
+        ]
+    ]
+    inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
+    return inline_kb_markup
+
 
 def categories_keyboard():
     '''Генератор кнопок с категориями для выбора'''

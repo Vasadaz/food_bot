@@ -21,7 +21,7 @@ from ._bot_functions import (
     random_recipe_handler,
     liked_dishes,
     user_settings,
-    user_dishes,
+    liked_dish,
     user_categories,
     save_phone
 )
@@ -83,7 +83,7 @@ def handle_users_reply(update, context):
         'RANDOM_RECIPE': random_recipe_handler,
         'LIKED_DISHES': liked_dishes,
         'USER_SETTINGS': user_settings,
-        'LIKED_DISH': user_dishes,
+        'LIKED_DISH': liked_dish,
         'USER_CATEGORIES': user_categories,
         'SAVE_PHONE': save_phone,
 
