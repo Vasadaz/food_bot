@@ -76,12 +76,12 @@ class Dish(models.Model):
 class Guest(models.Model):
     name = models.CharField(
         verbose_name='Имя',
+        blank=True,
+        null=True,
         max_length=200,
     )
     telegram_id = models.IntegerField(
         verbose_name='Телеграм ID',
-        blank=True,
-        null=True,
         unique=True,
     )
     phonenumber = PhoneNumberField(

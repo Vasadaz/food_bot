@@ -12,23 +12,32 @@ def add_categories_to_guest(guest: Guest, categories: list):
             guest.priority_categories.add(category_obj)
 
 
-def add_guest(guest_notes: dict) -> Guest:
-    guest_obj = Guest(
-        name=guest_notes['name'],
-        telegram_id=guest_notes['telegram_id'],
-        phonenumber=normalize_owners_phonenumber(
-            guest_notes['phonenumber'],
-        )
+def create_guest(telegram_id: int):
+    guest, created = Guest.objects.get_or_create(
+        telegram_id=telegram_id,
     )
-    guest_obj.save()
+    return created
 
-    return guest_obj
+
+def delete_guest(telegram_id: int):
+    guest = Guest.objects.get(
+        telegram_id=telegram_id,
+    )
+    guest.delete()
+
+
+def add_guest_name(guest, name):
+    guest.name = name
+    guest.save()
 
 
 def add_guest_phonenumber(guest: Guest, phonenumber: str):
-    if normalize_owners_phonenumber(phonenumber):
-        guest.phonenumber = phonenumber
+    if not normalize_owners_phonenumber(phonenumber):
+        return False
+    else:
+        guest.phonenumber = normalize_owners_phonenumber(phonenumber)
         guest.save()
+        return True
 
 
 def add_new_categories_to_guest(guest: Guest, categories: list):
@@ -64,6 +73,9 @@ def get_guest_likes(guest: Guest) -> Guest:
 
 def normalize_owners_phonenumber(phonenumber: str):
     normalization_number = phonenumbers.parse(phonenumber, 'RU')
+    if not phonenumbers.is_possible_number(normalization_number):
+        return False
+
     international_number = phonenumbers.format_number(
         normalization_number,
         phonenumbers.PhoneNumberFormat.E164
@@ -71,8 +83,6 @@ def normalize_owners_phonenumber(phonenumber: str):
 
     if not normalization_number.italian_leading_zero:
         return international_number
-    else:
-        return None
 
 
 def remove_categories_of_guest(guest: Guest):

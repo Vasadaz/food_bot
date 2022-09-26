@@ -1,3 +1,5 @@
+# from ._bot import get_database_connection()
+
 from ._func_for_dish import (
     get_random_dish,
     get_dish_content
@@ -15,6 +17,21 @@ from ._keyboards import (
     liked_dish_keyboard
 )
 
+from ._func_for_guest import (
+    create_guest,
+    get_guest,
+    add_guest_name,
+    add_guest_phonenumber,
+    delete_guest
+)
+# _database.set(
+#     user,
+#     json.dumps({
+#         'speaker': query.data,
+#         'block': block_id
+#     })
+# )
+
 def start(update, context):
     try:
         query = update.callback_query
@@ -23,6 +40,14 @@ def start(update, context):
     except:
         chat_id = update.message.chat_id
         message_id = update.message.message_id
+
+    if not create_guest(chat_id):
+        context.bot.send_message(
+            chat_id=chat_id,
+            text='Привет! Мы скучали :)',
+            reply_markup=main_menu_keyboard()
+        )
+        return 'PROFILE'
 
     context.bot.send_message(
         chat_id=chat_id,
@@ -62,6 +87,7 @@ def input_user_name(update, context):
     elif query.data == 'disagree':
         message_text = 'Очень жаль, что вы не с нами. Если передумаете - нажмите кнопку'
 
+        delete_guest(query.message.chat.id)
         context.bot.send_message(
             chat_id=query.message.chat.id,
             text=message_text,
@@ -81,6 +107,10 @@ def input_user_name(update, context):
 def input_phone_number(update, context):
     chat_id = update.message.chat_id
 
+    guest = get_guest(chat_id)
+    guest_name = update.message.text
+    add_guest_name(guest, guest_name)
+
     context.bot.send_message(
         chat_id=chat_id,
         text='Введите номер телефона:',
@@ -94,8 +124,38 @@ def input_phone_number(update, context):
         message_id=update.message.message_id - 1
     )
 
-    return 'MAIN_MENU'
+    return 'SAVE_PHONE'
 
+
+def save_phone(update, context):
+    chat_id = update.message.chat_id
+    guest = get_guest(chat_id)
+    guest_phonenumber = update.message.text
+    phonenumber_accepted = add_guest_phonenumber(guest, guest_phonenumber)
+
+    if not phonenumber_accepted:
+        context.bot.send_message(
+            chat_id=update.message.chat.id,
+            text='Неверный номер. Пожалуйста, введите номер в формате "+79990000000" или "9990000000"',
+        )
+        context.bot.delete_message(
+            chat_id=update.message.chat.id,
+            message_id=update.message.message_id
+        )
+        context.bot.delete_message(
+            chat_id=update.message.chat.id,
+            message_id=update.message.message_id - 1
+        )
+        return 'SAVE_PHONE'
+    else:
+        message_text = 'Выберите действие:'
+
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=message_text,
+            reply_markup=main_menu_keyboard()
+        )
+        return 'PROFILE'
 
 def main_menu_handler(update, context):
     try:
@@ -314,7 +374,7 @@ def liked_dishes(update, context):
             chat_id=query.message.chat.id,
             message_id=query.message.message_id
         )
-        return 'LIKED_DISHES'
+        return 'LIKED_DISH'
 
     elif query.data == 'main_menu':
         message_text = 'Выберите действие:'
