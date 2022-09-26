@@ -31,15 +31,24 @@ def get_random_dish(guest: Guest):
         guest_budget = dishes[0].price
 
     if not guest_categories:
-        guest_categories = Category.objects.all()
-
-    dishes = Dish.objects.filter(
-        active=True,
-        categories__in=guest_categories,
-        price__lte=guest_budget
-    ).exclude(
-        title__in=guest_dislikes | guest_likes,
-    )
+        dishes = Dish.objects.filter(
+            active=True,
+            categories__in=guest_categories,
+            price__lte=guest_budget
+        ).exclude(
+            title__in=guest_dislikes | guest_likes,
+        )
+    else:
+        dishes = Dish.objects.all()
+        for category in guest_categories:
+            category_dishes = Dish.objects.filter(
+                active=True,
+                categories=category,
+                price__lte=guest_budget
+            ).exclude(
+                title__in=guest_dislikes | guest_likes,
+            )
+            dishes = dishes & category_dishes
 
     dish = random.choice(dishes)
     return dish
