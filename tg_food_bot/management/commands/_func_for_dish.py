@@ -1,6 +1,6 @@
 import random
 
-from tg_food_bot.models import Category, Dish, Guest
+from tg_food_bot.models import Dish, Guest
 
 
 def get_dish_content(dish):

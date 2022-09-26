@@ -1,4 +1,4 @@
-from tg_food_bot.models import Category, Dish, Guest
+from tg_food_bot.models import Category
 
 
 def get_categories() -> list:

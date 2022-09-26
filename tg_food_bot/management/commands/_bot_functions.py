@@ -76,7 +76,7 @@ def start(update, context):
         )
         return 'PROFILE'
 
-    with open('static/any_file.pdf', 'rb') as file:
+    with open('static/Согласие на обработку персональных данных.pdf', 'rb') as file:
         context.bot.send_document(chat_id=chat_id, document=file)
 
     message_text = '''
