@@ -2,12 +2,6 @@ import json
 from environs import Env
 import redis
 
-from ._func_for_dish import (
-    get_random_dish,
-    get_dish_content,
-    get_dish
-)
-
 from ._keyboards import (
     start_keyboard,
     disagree_keyboard,
@@ -21,6 +15,12 @@ from ._keyboards import (
     unliked_dish_keyboard
 )
 
+from ._func_for_dish import (
+    get_random_dish,
+    get_dish_content,
+    get_dish
+)
+
 from ._func_for_guest import (
     create_guest,
     get_guest,
@@ -30,7 +30,10 @@ from ._func_for_guest import (
     set_like,
     set_dislike,
     remove_like,
-    get_guest_likes
+    get_guest_likes,
+    get_guest_categories,
+    remove_categories_of_guest,
+    change_category_to_guest
 )
 
 # guest_db = f'guest_tg_{chat_id}'
@@ -289,13 +292,14 @@ def settings_handler(update, context):
         return 'LIKED_DISHES'
 
     elif query.data == 'settings':
-        message_text = 'Настройка фильтров отображения рецептов:' \
-                       'Генератор кнопок по категориям + сброс всех '
+        # guest_categories = get_guest_categories(guest)
+        # format_categories = ', '.join([category.title for category in guest_categories])
+        message_text = f'Выберите интересующие Вас категории блюд'
 
         context.bot.send_message(
             chat_id=chat_id,
             text=message_text,
-            reply_markup=categories_keyboard()
+            reply_markup=categories_keyboard(chat_id)
         )
         context.bot.delete_message(
             chat_id=query.message.chat.id,
@@ -525,75 +529,12 @@ def liked_dish(update, context):
         )
         return 'LIKED_DISH'
 
+
 def user_settings(update, context):
     query = update.callback_query
     chat_id = query.message.chat.id
-
-    if query.data == 'category':
-        message_text = 'Категории блюд. Сейчас выбрана категория {category}'
-
-        context.bot.send_message(
-            chat_id=chat_id,
-            text=message_text,
-            reply_markup=categories_keyboard()
-        )
-        context.bot.delete_message(
-            chat_id=query.message.chat.id,
-            message_id=query.message.message_id
-        )
-        return 'USER_CATEGORIES'
-
-    elif query.data == 'main_menu':
-        message_text = 'Выберите действие:'
-
-        context.bot.send_message(
-            chat_id=chat_id,
-            text=message_text,
-            reply_markup=main_menu_keyboard()
-        )
-        context.bot.delete_message(
-            chat_id=query.message.chat.id,
-            message_id=query.message.message_id
-        )
-        return 'PROFILE'
-
-
-# def user_dishes(update, context):
-#     query = update.callback_query
-#     chat_id = query.message.chat.id
-#
-#     if query.data == 'main_menu':
-#         message_text = 'Выберите действие:'
-#
-#         context.bot.send_message(
-#             chat_id=chat_id,
-#             text=message_text,
-#             reply_markup=main_menu_keyboard()
-#         )
-#         context.bot.delete_message(
-#             chat_id=query.message.chat.id,
-#             message_id=query.message.message_id
-#         )
-#         return 'PROFILE'
-#
-#     elif query.data == 'dish':
-#         message_text = 'Блюдо'
-#
-#         context.bot.send_message(
-#             chat_id=chat_id,
-#             text=message_text,
-#             reply_markup=liked_dish_keyboard()
-#         )
-#         context.bot.delete_message(
-#             chat_id=query.message.chat.id,
-#             message_id=query.message.message_id
-#         )
-#         return
-
-
-def user_categories(update, context):
-    query = update.callback_query
-    chat_id = query.message.chat.id
+    message_id = query.message.message_id
+    guest = get_guest(telegram_id=chat_id)
 
     if query.data == 'main_menu':
         message_text = 'Выберите действие:'
@@ -609,17 +550,68 @@ def user_categories(update, context):
         )
         return 'PROFILE'
 
-    elif query.data == 'category':
-        message_text = 'Категории блюд. Сейчас выбрана категория {category}'
+    elif query.data == 'del_user_categories':
+        remove_categories_of_guest(guest)
 
-        context.bot.edit_message_text(
+        context.bot.edit_message_reply_markup(
             chat_id=chat_id,
-            message_id=query.message.message_id,
-            text=message_text,
-            reply_markup=categories_keyboard()
+            message_id=message_id,
+            reply_markup=categories_keyboard(chat_id)
         )
-        context.bot.delete_message(
-            chat_id=query.message.chat.id,
-            message_id=query.message.message_id
+        return 'USER_SETTINGS'
+
+    else:
+        category_title = query.data
+        change_category_to_guest(guest, category_title)
+
+        context.bot.edit_message_reply_markup(
+            chat_id=chat_id,
+            message_id=message_id,
+            reply_markup=categories_keyboard(chat_id)
         )
-        return 'USER_CATEGORIES'
+        return 'USER_SETTINGS'
+
+
+# def user_categories(update, context):
+#     query = update.callback_query
+#     chat_id = query.message.chat.id
+#     message_id = query.message.message_id
+#     guest = get_guest(telegram_id=chat_id)
+#
+#     if query.data == 'main_menu':
+#         message_text = 'Выберите действие:'
+#
+#         context.bot.send_message(
+#             chat_id=chat_id,
+#             text=message_text,
+#             reply_markup=main_menu_keyboard()
+#         )
+#         context.bot.delete_message(
+#             chat_id=query.message.chat.id,
+#             message_id=query.message.message_id
+#         )
+#         return 'PROFILE'
+#
+#     elif query.data == 'del_user_categories':
+#         remove_categories_of_guest(guest)
+#         message = 'Все категории сброшены. Сейчас у вас не выбрано ни одной категории'
+#         context.bot.edit_message_reply_markup(
+#             chat_id=chat_id,
+#             message_id=message_id,
+#             message=message
+#         )
+#
+#     else:
+#         category_title = query.data
+#         change_category_to_guest(guest, category_title)
+#
+#         context.bot.edit_message_reply_markup(
+#             chat_id=chat_id,
+#             message_id=message_id,
+#             reply_markup=categories_keyboard(chat_id)
+#         )
+#         context.bot.delete_message(
+#             chat_id=query.message.chat.id,
+#             message_id=query.message.message_id
+#         )
+#         return 'USER_CATEGORIES'

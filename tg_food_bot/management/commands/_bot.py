@@ -22,7 +22,7 @@ from ._bot_functions import (
     liked_dishes,
     user_settings,
     liked_dish,
-    user_categories,
+    # user_categories,
     save_phone
 )
 
@@ -84,7 +84,7 @@ def handle_users_reply(update, context):
         'LIKED_DISHES': liked_dishes,
         'USER_SETTINGS': user_settings,
         'LIKED_DISH': liked_dish,
-        'USER_CATEGORIES': user_categories,
+        # 'USER_CATEGORIES': user_categories,
         'SAVE_PHONE': save_phone,
 
     }

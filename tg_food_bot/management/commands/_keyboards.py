@@ -1,6 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from ._func_for_guest import get_guest_likes, get_guest
+from ._func_for_guest import get_guest_likes, get_guest, get_guest_categories
+from ._func_for_category import get_categories
 
 def start_keyboard():
     inline_keyboard = [
@@ -97,15 +98,19 @@ def unliked_dish_keyboard():
     return inline_kb_markup
 
 
-def categories_keyboard():
-    '''Генератор кнопок с категориями для выбора'''
-    inline_keyboard = [
-        [InlineKeyboardButton('1', callback_data='category')],
-        [InlineKeyboardButton('2', callback_data='category')],
-        [InlineKeyboardButton('3', callback_data='category')],
-        [InlineKeyboardButton('Сбросить категорию', callback_data='del_user_category'),
-         InlineKeyboardButton('Главное меню', callback_data='main_menu')]
-    ]
+def categories_keyboard(chat_id):
+    guest = get_guest(telegram_id=chat_id)
+    guest_categories = [category.title for category in get_guest_categories(guest)]
+    categories = get_categories()
+    inline_keyboard = []
+    for category in categories:
+        if category in guest_categories:
+            inline_keyboard.append([InlineKeyboardButton(f'{category} \U00002705', callback_data=f'{category}')])
+        else:
+            inline_keyboard.append([InlineKeyboardButton(f'{category}', callback_data=f'{category}')])
+
+    inline_keyboard.append([InlineKeyboardButton('Сбросить', callback_data='del_user_categories')])
+    inline_keyboard.append([InlineKeyboardButton('Главное меню', callback_data='main_menu')])
 
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup

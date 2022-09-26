@@ -12,6 +12,18 @@ def add_categories_to_guest(guest: Guest, categories: list):
             guest.priority_categories.add(category_obj)
 
 
+def change_category_to_guest(guest: Guest, category: str):
+    category_obj = Category.objects.get(
+        title=category,
+    )
+    if category_obj in guest.priority_categories.all():
+        guest.priority_categories.remove(category)
+    else:
+        guest.priority_categories.add(category_obj)
+
+# def remove_category_from_guest(guest: Guest, category: str):
+#     guest.priority_categories.remove(category)
+
 def create_guest(telegram_id: int):
     guest, created = Guest.objects.get_or_create(
         telegram_id=telegram_id,
