@@ -1,8 +1,11 @@
-# from ._bot import get_database_connection()
+import json
+from environs import Env
+import redis
 
 from ._func_for_dish import (
     get_random_dish,
-    get_dish_content
+    get_dish_content,
+    get_dish
 )
 
 from ._keyboards import (
@@ -22,15 +25,43 @@ from ._func_for_guest import (
     get_guest,
     add_guest_name,
     add_guest_phonenumber,
-    delete_guest
+    delete_guest,
+    set_like,
+    set_dislike,
+    remove_like,
 )
+
+# guest_db = f'guest_tg_{chat_id}'
+# ---------------------------------------
 # _database.set(
-#     user,
+#     guest_db,
 #     json.dumps({
-#         'speaker': query.data,
-#         'block': block_id
+#         'dish': dish,
 #     })
 # )
+# --------------------------------------
+# speaker_id = json.loads(_database.get(guest_db))
+#
+
+env = Env()
+env.read_env()
+_database = None
+
+def get_database_connection():
+    global _database
+    if _database is None:
+        database_password = env.str("DATABASE_PASSWORD")
+        database_host = env.str("DATABASE_HOST")
+        database_port = env.str("DATABASE_PORT")
+        _database = redis.Redis(
+            host=database_host,
+            port=database_port,
+            password=database_password,
+            decode_responses=True,
+        )
+    return _database
+get_database_connection()
+
 
 def start(update, context):
     try:
@@ -157,6 +188,7 @@ def save_phone(update, context):
         )
         return 'PROFILE'
 
+
 def main_menu_handler(update, context):
     try:
         query = update.callback_query
@@ -188,6 +220,8 @@ def main_menu_handler(update, context):
 def profile_handler(update, context):
     query = update.callback_query
     chat_id = query.message.chat.id
+    guest = get_guest(telegram_id=chat_id)
+    guest_db = f'guest_tg_{chat_id}'
 
     if query.data == 'profile':
         message_text = 'Выберите действие:'
@@ -204,8 +238,15 @@ def profile_handler(update, context):
         return 'SETTINGS'
 
     elif query.data == 'recipe':
-        dish = get_random_dish()
+        dish = get_random_dish(guest)
         dish_content = get_dish_content(dish)
+
+        _database.set(
+            guest_db,
+            json.dumps({
+                'dish': dish.title,
+            })
+        )
 
         context.bot.send_photo(
             chat_id=chat_id,
@@ -276,8 +317,14 @@ def random_recipe_handler(update, context):
     query = update.callback_query
     chat_id = query.message.chat.id
     message_id = query.message.message_id
+    guest = get_guest(telegram_id=chat_id)
+    guest_db = f'guest_tg_{chat_id}'
 
     if query.data == 'like':
+        dish_title = json.loads(_database.get(guest_db))['dish']
+        dish = get_dish(dish_title)
+        set_like(guest, dish)
+
         context.bot.edit_message_reply_markup(
             chat_id=chat_id,
             message_id=message_id,
@@ -286,6 +333,10 @@ def random_recipe_handler(update, context):
         return 'RANDOM_RECIPE'
 
     elif query.data == 'unlike':
+        dish_title = json.loads(_database.get(guest_db))['dish']
+        dish = get_dish(dish_title)
+        remove_like(guest, dish)
+
         context.bot.edit_message_reply_markup(
             chat_id=chat_id,
             message_id=message_id,
@@ -294,8 +345,18 @@ def random_recipe_handler(update, context):
         return 'RANDOM_RECIPE'
 
     elif query.data == 'dislike':
-        dish = get_random_dish()
+        dish_title = json.loads(_database.get(guest_db))['dish']
+        dish = get_dish(dish_title)
+        set_dislike(guest, dish)
+
+        dish = get_random_dish(guest)
         dish_content = get_dish_content(dish)
+        _database.set(
+            guest_db,
+            json.dumps({
+                'dish': dish.title,
+            })
+        )
 
         context.bot.send_photo(
             chat_id=chat_id,
@@ -317,8 +378,14 @@ def random_recipe_handler(update, context):
         return 'RANDOM_RECIPE'
 
     elif query.data == 'next':
-        dish = get_random_dish()
+        dish = get_random_dish(guest)
         dish_content = get_dish_content(dish)
+        _database.set(
+            guest_db,
+            json.dumps({
+                'dish': dish.title,
+            })
+        )
 
         context.bot.send_photo(
             chat_id=chat_id,

@@ -43,3 +43,6 @@ def get_random_dish(guest: Guest):
 
     dish = random.choice(dishes)
     return dish
+
+def get_dish(title):
+    return Dish.objects.get(title=title)
