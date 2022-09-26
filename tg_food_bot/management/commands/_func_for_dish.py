@@ -30,10 +30,9 @@ def get_random_dish(guest: Guest):
         dishes = Dish.objects.all().order_by('-price')
         guest_budget = dishes[0].price
 
-    if not guest_categories:
+    if guest_categories.count() == 0:
         dishes = Dish.objects.filter(
             active=True,
-            categories__in=guest_categories,
             price__lte=guest_budget
         ).exclude(
             title__in=guest_dislikes | guest_likes,

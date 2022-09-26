@@ -72,14 +72,13 @@ def start(update, context):
         )
         return 'PROFILE'
 
+    with open('static/any_file.pdf', 'rb') as file:
+        context.bot.send_document(chat_id=chat_id, document=file)
+
     context.bot.send_message(
         chat_id=chat_id,
         text='Привет! Для начала работы с ботом нужно принять соглашение на обработку персональных данных',
         reply_markup=start_keyboard()
-    )
-    context.bot.send_document(
-        chat_id=chat_id,
-        document='https://www.africau.edu/images/default/sample.pdf'
     )
     context.bot.delete_message(
         chat_id=chat_id,
@@ -91,7 +90,7 @@ def start(update, context):
 
 def input_user_name(update, context):
     query = update.callback_query
-    chat_id = update.message.chat_id
+    chat_id = query.message.chat.id
     if query.data == 'agree':
         context.bot.send_message(
             chat_id=chat_id,
@@ -103,7 +102,7 @@ def input_user_name(update, context):
         )
         context.bot.delete_message(
             chat_id=chat_id,
-            message_id=query.message.message_id + 1
+            message_id=query.message.message_id - 1
         )
         return 'INPUT_PHONE_NUMBER'
 
@@ -122,7 +121,7 @@ def input_user_name(update, context):
         )
         context.bot.delete_message(
             chat_id=chat_id,
-            message_id=query.message.message_id + 1
+            message_id=query.message.message_id - 1
         )
         return 'START'
 
