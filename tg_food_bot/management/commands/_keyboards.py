@@ -115,3 +115,12 @@ def categories_keyboard(chat_id):
     inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
     return inline_kb_markup
 
+def no_random_keyboard():
+    inline_keyboard = [
+        [
+            InlineKeyboardButton('Настройки', callback_data='settings'),
+            InlineKeyboardButton('Главное меню', callback_data='main_menu')
+        ]
+    ]
+    inline_kb_markup = InlineKeyboardMarkup(inline_keyboard)
+    return inline_kb_markup

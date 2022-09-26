@@ -24,7 +24,6 @@ def get_random_dish(guest: Guest):
     guest_budget = guest.budget
     guest_categories = guest.priority_categories.all()
     guest_dislikes = guest.dislikes.all()
-    guest_likes = guest.likes.all()
 
     if not guest_budget:
         dishes = Dish.objects.all().order_by('-price')
@@ -35,7 +34,7 @@ def get_random_dish(guest: Guest):
             active=True,
             price__lte=guest_budget
         ).exclude(
-            title__in=guest_dislikes | guest_likes,
+            title__in=guest_dislikes,
         )
     else:
         dishes = Dish.objects.all()
@@ -45,10 +44,12 @@ def get_random_dish(guest: Guest):
                 categories=category,
                 price__lte=guest_budget
             ).exclude(
-                title__in=guest_dislikes | guest_likes,
+                title__in=guest_dislikes,
             )
             dishes = dishes & category_dishes
 
+    if dishes.count() == 0:
+        return False
     dish = random.choice(dishes)
     return dish
 

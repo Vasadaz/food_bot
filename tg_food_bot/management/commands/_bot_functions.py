@@ -12,13 +12,14 @@ from ._keyboards import (
     liked_dishes_keyboard,
     categories_keyboard,
     liked_dish_keyboard,
-    unliked_dish_keyboard
+    unliked_dish_keyboard,
+    no_random_keyboard
 )
 
 from ._func_for_dish import (
     get_random_dish,
     get_dish_content,
-    get_dish
+    get_dish,
 )
 
 from ._func_for_guest import (
@@ -229,6 +230,19 @@ def profile_handler(update, context):
         return 'SETTINGS'
 
     elif query.data == 'recipe':
+        if not get_random_dish(guest):
+            message = 'Нет блюд, соответствующих всем выбранным категориям'
+            context.bot.send_message(
+                chat_id=chat_id,
+                text=message,
+                reply_markup=no_random_keyboard()
+            )
+            context.bot.delete_message(
+                chat_id=chat_id,
+                message_id=query.message.message_id
+            )
+            return 'SETTINGS'
+
         dish = get_random_dish(guest)
         dish_content = get_dish_content(dish)
 
@@ -341,6 +355,19 @@ def random_recipe_handler(update, context):
         dish_title = json.loads(_database.get(guest_db))['dish']
         dish = get_dish(dish_title)
         set_dislike(guest, dish)
+
+        if not get_random_dish(guest):
+            message = 'Нет блюд, соответствующих всем выбранным категориям'
+            context.bot.send_message(
+                chat_id=chat_id,
+                text=message,
+                reply_markup=no_random_keyboard()
+            )
+            context.bot.delete_message(
+                chat_id=chat_id,
+                message_id=query.message.message_id
+            )
+            return 'SETTINGS'
 
         dish = get_random_dish(guest)
         dish_content = get_dish_content(dish)
