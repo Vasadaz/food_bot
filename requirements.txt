@@ -3,6 +3,7 @@ Django==4.1.*
 django-phonenumber-field==7.0.*
 environs==9.5.*
 lxml==4.9.*
+mysqlclient==2.1.1
 phonenumbers==8.12.*
 Pillow==9.2.*
 python-telegram-bot==13.*

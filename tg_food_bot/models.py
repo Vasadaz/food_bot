@@ -50,7 +50,7 @@ class Dish(models.Model):
         blank=True,
         null=True,
     )
-    price = models.IntegerField(
+    price = models.SmallIntegerField(
         verbose_name='Цена порции',
         blank=True,
         null=True,
