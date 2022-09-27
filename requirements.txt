@@ -1,6 +1,5 @@
 beautifulsoup4==4.11.*
 Django==4.1.*
-django-money==3.0.0
 django-phonenumber-field==7.0.*
 environs==9.5.*
 lxml==4.9.*

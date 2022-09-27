@@ -4,6 +4,7 @@ from django.utils.safestring import mark_safe
 from .models import Dish, Guest, Category
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'title',
@@ -11,6 +12,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_per_page = 15
 
 
+@admin.register(Guest)
 class GuestAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -25,6 +27,7 @@ class GuestAdmin(admin.ModelAdmin):
     list_per_page = 15
 
 
+@admin.register(Dish)
 class DishAdmin(admin.ModelAdmin):
     fields = [
         'title',
@@ -33,7 +36,7 @@ class DishAdmin(admin.ModelAdmin):
         'categories',
         'ingredients',
         'recipe',
-        'price',
+        'price_portion',
         'active',
     ]
     list_display = (
@@ -49,10 +52,3 @@ class DishAdmin(admin.ModelAdmin):
     @admin.display(description='Превью изображения')
     def preview(self, obj):
         return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
-
-
-
-
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Guest, GuestAdmin)
-admin.site.register(Dish, DishAdmin)

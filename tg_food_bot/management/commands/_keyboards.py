@@ -3,6 +3,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from ._func_for_guest import get_guest_likes, get_guest, get_guest_categories
 from ._func_for_category import get_categories
 
+
 def start_keyboard():
     inline_keyboard = [
         [InlineKeyboardButton('Принять', callback_data='agree')],
@@ -69,7 +70,7 @@ def liked_dishes_keyboard(chat_id):
     dishes = get_guest_likes(guest)
 
     inline_keyboard = [
-            [InlineKeyboardButton(f'{dish.title}', callback_data=f'{dish.title}')] for dish in dishes
+        [InlineKeyboardButton(f'{dish.title}', callback_data=f'{dish.title}')] for dish in dishes
     ]
     inline_keyboard.append([InlineKeyboardButton('Главное меню', callback_data='main_menu')])
 
@@ -133,7 +134,7 @@ def no_random_keyboard():
 def budget_keyboard(chat_id):
     guest = get_guest(telegram_id=chat_id)
     if guest.budget:
-        guest_budget = int(guest.budget.amount)
+        guest_budget = guest.budget
     else:
         guest_budget = None
     budgets = [200, 350, 500, 750, 1000]

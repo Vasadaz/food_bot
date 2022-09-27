@@ -11,7 +11,7 @@ def get_dish_content(dish):
     message = f'{title}\n\n' \
               f'{ingredients}\n\n' \
               f'{recipe}\n\n' \
-              f'Стоимость одной порции {price}.'
+              f'Стоимость одной порции {price} ₽.'
 
     collected_dish = {
         'image': dish.image,
@@ -52,6 +52,7 @@ def get_random_dish(guest: Guest):
         return False
     dish = random.choice(dishes)
     return dish
+
 
 def get_dish(title):
     return Dish.objects.get(title=title)
