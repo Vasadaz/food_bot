@@ -36,7 +36,7 @@ class DishAdmin(admin.ModelAdmin):
         'categories',
         'ingredients',
         'recipe',
-        'price_portion',
+        'price',
         'active',
     ]
     list_display = (
