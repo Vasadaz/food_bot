@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djmoney',
     'tg_food_bot.apps.TgFoodBotConfig',
 ]
 
@@ -84,8 +83,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'food_db',
-        'USER': 'root',
-        'PASSWORD': env.str('MYSQL_ROOT_PASSWORD'),
+        'USER': env.str('MYSQL_LOGIN'),
+        'PASSWORD': env.str('MYSQL_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -126,7 +125,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR /  'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
