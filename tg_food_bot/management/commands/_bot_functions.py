@@ -46,9 +46,9 @@ _database = None
 def get_database_connection():
     global _database
     if _database is None:
-        database_password = env.str("DATABASE_PASSWORD")
-        database_host = env.str("DATABASE_HOST")
-        database_port = env.str("DATABASE_PORT")
+        database_password = env.str('REDIS_PASSWORD')
+        database_host = env.str('REDIS_HOST')
+        database_port = env.str('REDIS_PORT')
         _database = redis.Redis(
             host=database_host,
             port=database_port,
