@@ -98,7 +98,7 @@
     JSON-файле `static/recipes.json`, то воспользуйтесь командой:
 
     ```shell 
-    python3 manage.py upload_dishes
+    python3 manage.py delete_dishes
     ```
 
 9. Для подтверждения обработки персональных данных сохранить файл pdf в директорию `static`
